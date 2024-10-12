@@ -1,0 +1,59 @@
+---
+- name: Read kubeconfig from master
+  slurp:
+    path: "/etc/rancher/k3s/k3s.yaml"
+  register: cluster_kubeconfig
+  ignore_errors: yes
+
+- name: Store new cluster kubeconfig
+  set_fact:
+    kubeconfig: "{{ cluster_kubeconfig.content | b64decode |from_yaml }}"    
+  ignore_errors: yes
+
+
+
+- name: Get argocd token
+  uri:
+    url: '{{ argocd_endpoint }}/api/v1/session'
+    body_format: json
+    method: POST
+    body: '{"username":"{{ argocd_user }}","password":"{{ argocd_passwd }}"}'
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    validate_certs: false
+  register: argocd_token
+  ignore_errors: yes
+
+- name: Create creates the cluster
+  uri:
+    url: '{{ argocd_endpoint }}/api/v1/clusters'
+    method: POST
+    body:
+      # annotations:
+      #   property1: string
+      #   property2: string
+      clusterResources: true
+      config:
+        tlsClientConfig:
+          caData: '{{ kubeconfig["clusters"][0]["cluster"]["certificate-authority-data"] }}'
+          certData: '{{ kubeconfig["users"][0]["user"]["client-certificate-data"] }}'
+          insecure: false
+          keyData: '{{ kubeconfig["users"][0]["user"]["client-key-data"] }}'
+          serverName: '{{ master_ip }}'
+      #labels:
+      #  property1: string
+      #  property2: string
+      name: '{{ argocd_cluster_name }}'
+      server: 'https://{{ master_ip }}:6443'
+      serverVersion: '{{ kubeconfig["apiVersion"] }}'
+      info:
+        apiVersions:
+          - '{{ kubeconfig["apiVersion"] }}'
+    body_format: json
+    headers:
+      Authorization: 'Bearer {{ argocd_token["json"]["token"] }}'
+      Content-Type: application/json
+    follow_redirects: safe
+    validate_certs: false
+  register: result
+  ignore_errors: yes

@@ -1,0 +1,16 @@
+---
+- name: Delete Kubernetes Node
+  hosts: master  # 指定要在哪些主机上运行此playbook
+  become: yes  # 使用sudo权限运行命令
+  become_method: sudo
+  tasks:
+    - name: Delete node from Kubernetes cluster
+      command: kubectl delete node {{ item }}
+      loop: "{{ groupname }}"
+      register: delete_result
+      ignore_errors: yes  # 即使命令失败也继续执行
+
+    - name: Display delete command result
+      debug:
+        var: delete_result.stdout_lines
+

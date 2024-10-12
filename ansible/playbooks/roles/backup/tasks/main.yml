@@ -1,0 +1,16 @@
+---
+- name: Create backup dir
+  command: mkdir -p "{{ k3s_backup_dir }}"
+- name: Save etcd snapshot 
+  command: k3s etcd-snapshot save --dir "{{ k3s_backup_dir }}"
+  register: result
+
+- name: Print stdout
+  debug:
+    msg: "{{ result.stdout }}"
+
+- name: Save token
+  copy:
+    remote_src: True
+    src: "/var/lib/rancher/k3s/server/token"
+    dest: "{{ k3s_backup_dir }}"

@@ -1,0 +1,25 @@
+---
+- hosts: k3s_cluster
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  roles:
+    - role: prereq
+    - role: download
+
+- hosts: master
+  become: yes
+  become_method: sudo
+  vars:
+    domain: "{{ domain }}"
+    etcd_url: "{{ etcd_url }}"
+  roles:
+    - role: k3s/master-init
+    # - role: argocd
+    # - role: cicd
+
+- hosts: node
+  become: yes
+  become_method: sudo
+  roles:
+    - role: k3s/node

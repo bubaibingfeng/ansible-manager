@@ -1,0 +1,5 @@
+- hosts: node
+  become: yes
+  become_method: sudo
+  roles:
+    - role: k3s/node
