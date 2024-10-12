@@ -1,0 +1,25 @@
+---
+k3s_version: v1.22.3+k3s1  #k3s版本，一般不需要修改，如需修改，替换对应k3s的二进制文件
+ansible_user: root  ###可能需要修改。ansible启动用户名称，一般为node节点的普通用户名。
+systemd_dir: /etc/systemd/system #一般不需要修改
+master_ip: "{{ hostvars[groups['master-init'][0]]['ansible_host'] | default(groups['master-init'][0]) }}"
+#不需要修改
+#argocd 访问地址 
+argocd_endpoint: "https://47.109.199.70:32514"
+argocd_user: "admin"
+argocd_passwd: "PhqblaaCfgykOVEV"
+  #新建集群在arogcd中的名称
+argocd_cluster_name: "demo-k3s"
+
+#一般不需要修改
+dns_servers: ['172.30.5.10', '8.8.8.8']
+extra_server_args: "--cluster-init"
+extra_server_args: "--cluster-init --etcd-snapshot-dir=/tmp/db"
+extra_agent_args: ""
+
+#看情况修改
+#k3s备份目录
+k3s_backup_dir: "/tmp/k3s-backup"
+#k3s恢复token和快照位置
+k3s_restore_token_file: "/tmp/k3s-backup/token"
+k3s_snapshot_restore_file: "/tmp/k3s-backup/on-demand-k3s-demo-m1-1690959357"
