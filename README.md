@@ -43,4 +43,4 @@ tools/config.py
 #### 使用说明
 
 需外部提供MySQL和Redis，参数在tools/config.py内修改
-
+常用命令放于1文本文档中
