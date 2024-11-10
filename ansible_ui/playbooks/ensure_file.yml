@@ -1,0 +1,44 @@
+---
+- name: Transfer Terraform Configuration to Remote Hosts if Not Exists
+  hosts: "{{ kvm_name }}"
+  become: yes
+  become_method: sudo
+  gather_facts: no
+  vars:
+    ansible_become_password: "{{ kvm_password }}"
+    local_terraform_dir: "/home/userlocal/ansible-terraform"
+    remote_terraform_dir: "/home/userlocal/ansible-terraform"
+  tasks:
+    - name: Check if remote directory exists
+      stat:
+        path: "{{ remote_terraform_dir }}"
+      register: dir_check
+    - name: Sync Terraform files only if directory does not exist
+      block:
+        - name: Create remote directory
+          file:
+            path: "{{ remote_terraform_dir }}"
+            state: directory
+            mode: '0755'
+            owner: userlocal
+            group: userlocal
+        - name: Synchronize Terraform directory to remote host
+          synchronize:
+            src: "{{ local_terraform_dir }}/"
+            dest: "{{ remote_terraform_dir }}"
+            archive: yes
+            recursive: yes
+            rsync_opts:
+              - "--exclude=.terraform"
+              - "--exclude=.git"
+              - "--exclude=*.tfstate*"
+              - "--exclude=.terraform.lock.hcl"
+
+        - name: Set proper permissions
+          file:
+            path: "{{ remote_terraform_dir }}"
+            owner: userlocal
+            group: userlocal
+            recurse: yes
+            mode: '0755'
+      when: not dir_check.stat.exists

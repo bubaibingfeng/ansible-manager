@@ -1,0 +1,29 @@
+---
+- name: delete vm
+  hosts: "{{ kvm_name }}"  # 替换为你的主机组或具体主机
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  vars:
+    ansible_become_password: "{{kvm_password}}"
+    # vm_name: "test-vm"  # 你可以通过命令行或外部变量文件传递这个变量
+
+  tasks:
+    - name: Destroy the VM if it is running
+      command: "virsh destroy {{ vm_name }}"
+      ignore_errors: yes
+      register: destroy_output
+
+    - name: Debug VM destroy output
+      debug:
+        var: destroy_output.stdout
+
+    - name: Undefine the VM
+      command: "virsh undefine {{ vm_name }}"
+      ignore_errors: yes
+      register: undefine_output
+
+    - name: Debug VM undefine output
+      debug:
+        var: undefine_output.stdout

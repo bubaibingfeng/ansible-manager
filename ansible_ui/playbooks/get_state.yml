@@ -1,0 +1,19 @@
+- name: Gather VM Status
+  hosts: "{{groupname}}"  # 替换为你的目标主机或主机组
+  gather_facts: no  # 不收集Ansible默认的facts
+  tasks:
+    - name: Get CPU Usage
+      shell: top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}'
+      register: cpu_usage
+
+    - name: Get Memory Usage
+      shell: free | grep Mem | awk '{print $3/$2 * 100.0}'
+      register: memory_usage
+
+    - name: Get Disk Usage
+      shell: df / | awk 'NR==2 {print $5}' | sed 's/%//'
+      register: disk_usage
+
+    - name: Print VM Status
+      debug:
+        msg: "CPU Usage: {{ cpu_usage.stdout }}%, Memory Usage: {{ memory_usage.stdout }}%, Disk Usage: {{ disk_usage.stdout }}%"
