@@ -1,4 +1,0 @@
-2024-09-18 16:41:03,993 INFO run_with_reloader /workspace/Python/py3/lib/python3.8/site-packages/django/utils/autoreload.py:598 Watching for file changes with StatReloader
-2024-09-18 16:41:19,949 INFO trigger_reload /workspace/Python/py3/lib/python3.8/site-packages/django/utils/autoreload.py:222 /workspace/Python/ansible_ui/ansible_ui/settings.py changed, reloading.
-2024-09-18 16:41:20,331 INFO run_with_reloader /workspace/Python/py3/lib/python3.8/site-packages/django/utils/autoreload.py:598 Watching for file changes with StatReloader
-2024-09-18 16:49:07,435 INFO trigger_reload /workspace/Python/py3/lib/python3.8/site-packages/django/utils/autoreload.py:222 /workspace/Python/ansible_ui/ansible_ui/settings.py changed, reloading.
