@@ -1,0 +1,35 @@
+
+<!-- 引入模板文件 -->
+{% extends "public_base.html" %}
+<!-- 导入自定义过滤器 -->
+{% load format %}
+
+<!-- 替换原 block content 内容 -->
+{% block content %}
+    <h3 style="text-align: center">Ansible 任务列表</h3>
+    <table class="table table-bordered">
+        <tr style="background-color:#e5dfdf">
+            <td>AnsibleID</td>
+            <td>CeleryID</td>
+            <td>GroupName</td>
+            <td>playbook</td>
+            <td>ExtraVars</td>
+            <td>AnsibleResult</td>
+            <td>CeleryResult</td>
+            <td>CreateTime</td>
+        </tr>
+                {% for task in object_list %}
+        <tr>
+            <td><a href="/ansible/get_Ansible_Tasks_Detail/{{task.pk}}/"></a>{{ task.AnsibleID }}</td>
+            <td>{{ task.CeleryID }}</td>
+            <td>{{ task.GroupName }}</td>
+            <td>{{ task.playbook }}</td>
+            <td>{{ task.ExtraVars }}</td>
+            <td><a href="/ansible/get_Ansible_Tasks_Detail/{{task.pk}}/">点击查看详情</a></td>
+            <td>{{ task.CeleryResult|celery_status }}</td>
+            <td>{{ task.CreateTime }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

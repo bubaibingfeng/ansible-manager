@@ -1,0 +1,45 @@
+{% extends "../public_base.html" %}
+
+{% block content %}
+    <h3 style="text-align: center; color:#44b073;">删除集群</h3>
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="exampleInputEmail1">主节点地址</label>
+        <textarea type="text" class="form-control" name="cluster_name" id="clusterName" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">集群名称</label>
+        <select id="vmNameSelect" class="form-control" name="cluster_name" onchange="updateFields()">
+            <option value="">请选择集群名称</option>
+            {% for g in cluster %}
+                <option value="{{ g.cluster_name }}" data-masterip="{{ g.master_ip }}" data-nodeip="{{ g.node_ip }}">
+                    {{ g.cluster_name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">node ip</label>
+        <textarea type="text" class="form-control" name="node_ip" id="node_ip" rows="1"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">提交</button>
+</form>
+
+<script>
+    function updateFields() {
+        var selectElement = document.getElementById("vmNameSelect");
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+        var master_ip = selectedOption.getAttribute("data-masterip");
+        var node_ip = selectedOption.getAttribute("data-nodeip");
+
+        document.getElementById("clusterName").value = master_ip || '';
+        document.getElementById("node_ip").value = node_ip || '';
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,74 @@
+\{% extends "../public_base.html" %}
+{% block content %}
+<h3 style="text-align: center; color:#44b073;">为现有集群增加节点</h3>
+<form method="POST">{% csrf_token %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="exampleInputEmail1">集群名称</label>
+                <select name="cluster_name" class="form-control">
+                    <option value="None">选择您的集群名称</option>
+                    {% for g in cluster %}
+                        <option value={{ g.cluster_name }}>
+                            {{ g.cluster_name}}
+                        </option>
+                    {% endfor %}
+                </select>
+              </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">master节点IP</label>
+                <select name="master_ip" class="form-control">
+                    <option value="None">选择您的master节点IP</option>
+                    {% for g in cluster %}
+                        <option value="{{ g.master_ip }}">
+                            {{ g.master_ip }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">node节点ip</label>
+                <textarea type="text" class="form-control" name="node_ip" rows="1" placeholder="该输入框输入的为有效值,多个IP用英文逗号分隔,如: 192.168.1.1,192.168.1.2"></textarea>
+            </div>
+
+            <!-- 添加的新的IP输入部分 -->
+            <div id="node-ip-container"></div>
+
+            
+
+    <button type="button" id="add-node-ip" class="btn btn-success">可用node节点 IP列表</button>
+</div>
+</div>
+<button type="submit" id="push" class="btn btn-default">提交</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $('#add-node-ip').click(function() {
+        var listHTML = `
+            <div class="list-group">
+                {% for g in vms %}
+                    <div class="list-group-item">
+                        <span>{{ g.vm_ip }}</span>
+                        <button type="button" class="btn btn-xs btn-primary select-ip pull-right" 
+                                data-ip="{{ g.vm_ip }}">选择</button>
+                    </div>
+                {% endfor %}
+            </div>
+        `;
+        
+        $('#node-ip-container').empty().append(listHTML);
+
+        // 为选择按钮添加点击事件
+        $('.select-ip').click(function() {
+            var selectedIP = $(this).data('ip');
+            $('textarea[name="node_ip"]').val(function(i, oldVal) {
+                return oldVal ? oldVal + ',' + selectedIP : selectedIP;
+            });
+        });
+    });
+</script>
+
+
+{% endblock %}

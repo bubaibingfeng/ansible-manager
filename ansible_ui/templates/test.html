@@ -1,0 +1,117 @@
+
+        <div class="row">
+        <div class="col-sm-3">
+            <div class="panel panel-success">
+            <!-- 面板 title  -->
+            <div class="panel-heading">面板标题</div>
+            <div class="panel-body">
+                <p>面板内容......</p>
+            </div>
+
+            <!-- 面板内放置一个 list 数据 -->
+            <ul class="list-group">
+                <li class="list-group-item">list 数据 1</li>
+                <li class="list-group-item">list 数据 2</li>
+                <li class="list-group-item">list 数据 3</li>
+                <li class="list-group-item">list 数据 4</li>
+                <li class="list-group-item">list 数据 5</li>
+            </ul>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <form method="POST">{% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">下拉列表</label>
+                            <!-- 下拉列表标签 -->
+                            <select name="groupName" class="form-control">
+                                <option value="None">选择一个数据</option>
+                                <option value="option 1">option 1</option>
+                                <option value="option 2">option 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">显示选中列表内容</label>
+                            <!-- 输入框标签 -->
+                            <input type="text" class="form-control" id="show_select" readonly>
+                        </div>
+                    </div>
+
+                </div>
+            <!-- 按钮 -->
+            <button type="submit" id="push" class="btn btn-default">提交</button>
+            <br>
+            <!-- 复选框 -->
+            <input type="checkbox" name="newsletter" value="Hot Fuzz" />a
+            <input type="checkbox" name="newsletter" value="Cold Fusion" />b
+            <input type="checkbox" name="accept" value="Evil Plans" />c
+            </form>
+            <p> 点击 这里会变红 </p><br>
+
+            <br>
+            监控这个输入框的内容<input type="text" name="input_change" class="form-control">
+            <p id="print_change" style="color: blue"></p>
+
+
+        </div>
+        <div class="col-sm-3">
+            周期任务测试<br>
+            数字每秒加一，点击关闭
+            <!-- 页面加载完，没秒显示数字加一，点击停止 -->
+            <div class="alert alert-success" role="alert" id="interval" style="width:90%">0</div>
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+                打开模态框
+            </button>
+        </div>
+        </div>
+
+<!-- 模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">模态框 title</h4>
+      </div>
+      <div class="modal-body">
+        模态框内容
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+    // 修改内容颜色
+    $('p').click(function () {$(this).css('color','red');})
+    // 监控 input 输入
+    $('input[name="input_change"]').on("input", function(){
+            $('#print_change').text('修改内容为：' + $(this)[0].value)
+
+    })
+    // 监控 select 选中项
+    $('select').change(function(){
+       $('#show_select')[0].value='选中值为：' + $(this, "option:selected")[0].value
+    })
+
+
+    // 周期任务，点击关闭
+    interval = setInterval(function(){
+        // 获取内容并转为 int 格式
+        n = parseInt($('#interval')[0].innerText)
+        console.log(n)
+        // 重新设置内容
+        $('#interval')[0].innerText = n + 1
+    }, 1000) // 1 秒钟执行一次
+
+    // 关闭周期任务
+    $('#interval').click(function(){
+        clearInterval(interval)
+    })
+</script>

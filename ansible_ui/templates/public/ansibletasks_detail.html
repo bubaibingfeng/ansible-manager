@@ -1,0 +1,37 @@
+
+<!-- 引入模板文件 -->
+{% extends "public_base.html" %}
+{% load format %}
+
+<!-- 替换原 block content 内容 -->
+{% block content %}
+    <h3 style="text-align: center">Ansible 任务详情</h3>
+    <table class="table table-bordered" style="">
+        <tr>
+            <td style="text-align: right;background-color:#e4f1c6">AnsibleID</td><td>{{ object.AnsibleID }}</td>
+        </tr><tr>
+            <td style="text-align: right;background-color:#e4f1c6">CeleryID</td><td>{{ object.CeleryID }}</td>
+        </tr><tr>
+            <td style="text-align: right;background-color:#e4f1c6">GroupName</td><td>{{ object.GroupName }}</td>
+        </tr><tr>
+            <td style="text-align: right;background-color:#e4f1c6">playbook</td><td>{{ object.playbook }}</td>
+        </tr><tr>
+            <td style="text-align: right;background-color:#e4f1c6">ExtraVars</td>
+            <td><pre id='extra_vars' style="height:auto"></pre></td>
+        </tr><tr>
+            <td style="text-align: right;background-color:#e4f1c6">AnsibleResult</td>
+            <!-- <td><pre id='ar' style="background: #e8e7e7">{{ object.AnsibleResult|ansible_result }}</pre></td> -->
+            <td><pre id='ar' style="background: black">{{ object.AnsibleResult|ansible_result }}</pre></td>
+        </tr><tr>
+            <td style="text-align: right;background-color:#e4f1c6">CeleryResult</td>
+            <td><pre id='celery_result' style="height:auto"></pre></td>
+        </tr><tr>
+            <td style="text-align: right;background-color:#e4f1c6">CreateTime</td><td>{{ object.CreateTime }}</td>
+        </tr>
+    </table>
+
+<script type="text/javascript">
+        $('#celery_result')[0].innerHTML = syntaxJson({{ object.CeleryResult|safe }})     // 格式化结果
+        $('#extra_vars')[0].innerHTML = syntaxJson({{ object.ExtraVars|safe }})
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+
+<!-- 引入模板文件 -->
+{% extends "public_base.html" %}
+<!-- 导入自定义过滤器 -->
+{% load format %}
+
+<!-- 替换原 block content 内容 -->
+{% block content %}
+    <h3 style="text-align: center">Ansible groups列表</h3>
+    <table class="table table-bordered">
+        <tr style="background-color:#e5dfdf">
+            <td>GroupName</td>
+            <td>HostList</td>
+        </tr>
+                {% for task in ansisble_groups %}
+        <tr>
+            <td>{{ task.groupName }}</td>
+            <td>{{ task.HostList }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

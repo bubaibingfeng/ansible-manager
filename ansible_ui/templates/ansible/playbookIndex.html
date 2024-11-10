@@ -1,0 +1,56 @@
+{% extends "../public_base.html" %}
+
+{% block content %}
+    <h3 style="text-align: center; color:#44b073;">执行Ansible Playbook</h3>
+<form method="POST">{% csrf_token %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="exampleInputEmail1">组列表</label>
+                <select name="groupName" class="form-control">
+                    <option value="None">选择一个任务组</option>
+                    {% for g in groups %}
+                        <option value={{ g.groupName }}>
+                            {{ g.nickName|default:g.groupName }}
+                        </option>
+                    {% endfor %}
+                </select>
+              </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="exampleInputPassword1">任务</label>
+                <select class="form-control" name="playbook">
+                    <option value="None">选择一个任务</option>
+                    {% for f in ansisble_playbooks %}
+                        <option value="{{ f.playbook }}">{{ f.nickName|default:f.playbook }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+        </div>
+
+    </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">输入所需要的参数</label>
+    <textarea type="text" class="form-control" name="extra_vars" rows=9></textarea>
+  </div>
+  <button type="submit" id="push" class="btn btn-default">提交</button>
+  <!-- <input type="checkbox" style="margin-left: 50px;"> &nbsp提交锁，防止误提交。 -->
+</form>
+</div>
+
+<script type="text/javascript">
+    // 提交任务之前，我们先确定一些必要参数，否则不提交
+    $('#push').click(function(){
+        if($("select[name='playbook'] option:selected")[0].value=="None"){
+            alert('必须选择一个操作组')
+            return false    // 阻止提交
+        }else if($('input[type="checkbox"]')[0].checked===false){
+            alert('请打开锁')
+            return false
+        }else{
+            return true
+        }
+    })
+</script>
+{% endblock %}

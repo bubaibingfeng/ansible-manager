@@ -1,0 +1,45 @@
+{% extends "../public_base.html" %}
+
+{% block content %}
+    <h3 style="text-align: center; color:#44b073;">删除虚拟机</h3>
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="exampleInputEmail1">宿主机名称</label>
+        <textarea type="text" class="form-control" name="kvm_name" id="kvmName" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">虚拟机名称</label>
+        <select id="vmNameSelect" class="form-control" name="vm_name" onchange="updateFields()">
+            <option value="">请选择虚拟机名称</option>
+            {% for g in vm_name %}
+                <option value="{{ g.vm_name }}" data-ip="{{ g.vm_ip }}" data-kvm="{{ g.kvm_name }}">
+                    {{ g.vm_name|default:g.vm_ip }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">虚拟机IP</label>
+        <textarea type="text" class="form-control" name="vm_ip" id="vmIp" rows="1"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">提交</button>
+</form>
+
+<script>
+    function updateFields() {
+        var selectElement = document.getElementById("vmNameSelect");
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+        var kvmName = selectedOption.getAttribute("data-kvm");
+        var vmIp = selectedOption.getAttribute("data-ip");
+
+        document.getElementById("kvmName").value = kvmName || '';
+        document.getElementById("vmIp").value = vmIp || '';
+    }
+</script>
+{% endblock %}

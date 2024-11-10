@@ -1,0 +1,29 @@
+
+<!-- 引入模板文件 -->
+{% extends "public_base.html" %}
+<!-- 导入自定义过滤器 -->
+{% load format %}
+
+<!-- 替换原 block content 内容 -->
+{% block content %}
+    <h3 style="text-align: center">Ansible 任务列表</h3>
+    <table class="table table-bordered">
+        <tr style="background-color:#e5dfdf">
+            <td>vm_name</td>
+            <td>vm_ip</td>
+            <td>vm_ssh_user</td>
+            <td>vm_ssh_pass</td>
+            <td>vm_ssh_port</td>
+
+                {% for task in object_list %}
+        <tr>
+            <td>{{ task.vm_name }}</td>
+            <td>{{ task.vm_ip }}</td>
+            <td>{{ task.vm_ssh_user }}</td>
+            <td>{{ task.vm_ssh_pass }}</td>
+            <td>{{ task.vm_ssh_port }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

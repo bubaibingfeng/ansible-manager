@@ -1,0 +1,74 @@
+{% extends "../public_base.html" %}
+
+{% block content %}
+    <h3 style="text-align: center; color:#44b073;">从现有集群删除节点</h3>
+<form method="POST">{% csrf_token %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="exampleInputEmail1">集群名称</label>
+                <select name="cluster_name" class="form-control">
+                    <option value="None">选择您的集群名称</option>
+                    {% for g in cluster %}
+                        <option value={{ g.cluster_name }}>
+                            {{ g.cluster_name}}
+                        </option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">master节点IP</label>
+                <select name="master_ip" class="form-control">
+                    <option value="None">选择您的master节点IP</option>
+                    {% for g in cluster %}
+                        <option value={{ g.master_ip }}>
+                            {{ g.master_ip}}
+                        </option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">要删除的node节点ip</label>
+                <textarea type="text" class="form-control" name="delete_node_ip" rows="1" placeholder="该输入框输入的为有效值,多个IP用英文逗号分隔,如: 192.168.1.1,192.168.1.2"></textarea>
+            </div>
+              <!-- <div class="form-group">
+                <label for="exampleInputEmail1">node节点IP</label>
+                <select name="groupName" class="form-control">
+                    <option value="None">输入您的node节点IP</option>
+                    {% for g in groups %}
+                        <option value={{ g.groupName }}>
+                            {{ g.nickName|default:g.groupName }}
+                        </option>
+                    {% endfor %}
+                </select>
+              </div> -->
+
+              <!-- 添加的新的IP输入部分 -->
+              <div id="node-ip-container">
+                <!-- 这里将动态添加新的输入框 -->
+              </div>
+              <!-- <button type="button" id="add-node-ip" class="btn btn-success">添加要删除的node节点 IP</button> -->
+
+        </div>
+    </div>
+
+  <!-- <div class="form-group">
+    <label for="exampleInputPassword1">输入额外参数</label>
+    <textarea type="text" class="form-control" name="extra_vars" rows=9></textarea>
+  </div> -->
+  <button type="submit" id="push" class="btn btn-default">提交</button>
+</form>
+
+<!-- <script type="text/javascript">
+    // 点击按钮时动态添加新的输入行
+    $('#add-node-ip').click(function() {
+        var newInput = `
+            <div class="form-group">
+                <label for="node_ip">node节点IP</label>
+                <input type="text" class="form-control" name="delete_node_ip[]" placeholder="输入要删除的node节点IP">
+            </div>
+        `;
+        $('#node-ip-container').append(newInput);  // 将新输入行添加到容器中
+    });
+</script> -->
+{% endblock %}
