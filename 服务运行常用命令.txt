@@ -1,0 +1,8 @@
+sudo apt-get update
+sudo pip3 install virtualenv
+virtualenv --python=/usr/bin/python3 py3
+source py3/bin/activate # 加载该环境
+sudo apt-get install python3.8-dev -y 
+pip3 install -r requirements.txt
+
+
