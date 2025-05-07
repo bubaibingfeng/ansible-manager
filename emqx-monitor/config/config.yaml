@@ -1,0 +1,19 @@
+database:
+  driver: "mysql"
+  dsn: "user:password@tcp(127.0.0.1:3306)/emqx_management?parseTime=true"
+
+monitor:
+  check_interval: "30s"
+  status_endpoint: "/status"
+  http_timeout: "5s"
+
+notification:
+  webhook_url: "http://alert-service/api/emqx-alerts"
+  retry_count: 3
+  retry_interval: "10s"
+
+server:
+  address: ":8080"
+  read_timeout: "5s"
+  write_timeout: "10s"
+  shutdown_timeout: "15s"
