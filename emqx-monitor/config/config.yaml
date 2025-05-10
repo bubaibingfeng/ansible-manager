@@ -4,6 +4,7 @@ database:
 
 monitor:
   check_interval: "30s"
+  port: 18083
   status_endpoint: "/status"
   http_timeout: "5s"
 

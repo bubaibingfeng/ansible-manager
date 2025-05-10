@@ -72,7 +72,7 @@ func (m *Monitor) checkAllNodes() {
 }
 
 func (m *Monitor) getNodes() ([]EMQXNode, error) {
-	rows, err := m.db.Query("SELECT id, node_name, public_ip, is_active, last_check FROM EMQX_Node")
+	rows, err := m.db.Query("SELECT id, node_name, node_public_ip FROM public_emqx_node")
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (m *Monitor) getNodes() ([]EMQXNode, error) {
 	var nodes []EMQXNode
 	for rows.Next() {
 		var node EMQXNode
-		if err := rows.Scan(&node.ID, &node.NodeName, &node.PublicIP, &node.IsActive, &node.LastCheck); err != nil {
+		if err := rows.Scan(&node.ID, &node.NodeName, &node.PublicIP); err != nil {
 			return nil, err
 		}
 		nodes = append(nodes, node)
@@ -90,8 +90,9 @@ func (m *Monitor) getNodes() ([]EMQXNode, error) {
 	return nodes, nil
 }
 
+
 func (m *Monitor) checkNodeStatus(node EMQXNode) {
-	url := fmt.Sprintf("http://%s%s", node.PublicIP, m.config.Monitor.StatusEndpoint)
+	url := fmt.Sprintf("http://%s:%d%s", node.PublicIP, m.config.Monitor.Port, m.config.Monitor.StatusEndpoint)
 	isActive := false
 
 	resp, err := m.httpClient.Get(url)
@@ -104,15 +105,14 @@ func (m *Monitor) checkNodeStatus(node EMQXNode) {
 	}
 
 	// 如果状态变化，处理通知
-	if node.IsActive && !isActive {
-		m.handleNodeDown(node)
-	}
+	// if node.IsActive && !isActive {
+	// 	m.handleNodeDown(node)
+	// }
 
-	// 更新数据库状态
-	if err := m.updateNodeStatus(node, isActive); err != nil {
-		m.logger.Printf("Error updating node %s status: %v", node.NodeName, err)
-	}
+	// 只记录日志，不更新数据库
+	m.logger.Printf("Checked node %s status. Active: %v", node.NodeName, isActive)
 }
+
 
 func (m *Monitor) handleNodeDown(node EMQXNode) {
 	payload := map[string]interface{}{

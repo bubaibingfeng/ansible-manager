@@ -23,6 +23,7 @@ type MonitorConfig struct {
 	CheckInterval  time.Duration `yaml:"check_interval"`
 	StatusEndpoint string        `yaml:"status_endpoint"`
 	HTTPTimeout    time.Duration `yaml:"http_timeout"`
+	Port           int           `yaml:"port"` 
 }
 
 type NotifyConfig struct {
