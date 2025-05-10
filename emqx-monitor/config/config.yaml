@@ -6,7 +6,7 @@ monitor:
   check_interval: "30s"
   port: 18083
   status_endpoint: "/status"
-  http_timeout: "5s"
+  http_timeout: "3s"
 
 notification:
   webhook_url: "http://alert-service/api/emqx-alerts"

@@ -9,6 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	_ "github.com/go-sql-driver/mysql"
+
 	"emqx-monitor/internal/config"
 	"emqx-monitor/internal/monitor"
 	"emqx-monitor/internal/server"
